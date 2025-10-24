@@ -3,30 +3,30 @@ package clientPackage;
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
+import operationPackage.*;
 
 public class Client {
     public static void main(String[] args) {
         String host = "localhost";
         int port = 1234;
         try (Socket socket = new Socket(host, port)) {
-            System.out.println(" Connecte au serveur " + host + ":" + port);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            System.out.println("Connecté au serveur " + host + ":" + port);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             Scanner sc = new Scanner(System.in);
             System.out.print("Entrez le premier nombre : ");
-            String operande1 = sc.nextLine();
-            System.out.print("Entrez l'operateur (+, -, *, /) : ");
-            String operateur = sc.nextLine();
-            System.out.print("Entrez le deuxieme nombre : ");
-            String operande2 = sc.nextLine();
-            out.println(operande1);
-            out.println(operateur);
-            out.println(operande2);
-            String reponse = in.readLine();
-            System.out.println(" Reponse du serveur : " + reponse);
-            socket.close();
+            double op1 = sc.nextDouble();
+            System.out.print("Entrez l’opérateur (+, -, *, /) : ");
+            String operateur = sc.next();
+            System.out.print("Entrez le deuxième nombre : ");
+            double op2 = sc.nextDouble();   
+            Operation operation = new Operation(op1, operateur, op2);
+            out.writeObject(operation);
+            String reponse = (String) in.readObject();
+            System.out.println("Réponse du serveur : " + reponse);
             sc.close();
-        } catch (IOException e) {
+            socket.close();
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
