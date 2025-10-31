@@ -13,7 +13,7 @@ public class Server extends Thread {
         new Server().start();
     }
 
-    // Méthode synchronisée pour incrémenter le nombre de clients
+    
     public static synchronized int incrementClientCount() {
         clientCount++;
         return clientCount;
@@ -29,7 +29,7 @@ public class Server extends Thread {
         }
 
         while (true) {
-            int clientNumber = incrementClientCount(); // utilisation de la méthode synchronisée
+            int clientNumber = incrementClientCount(); 
             try {
                 Socket socket = socketServer.accept();
                 System.out.println("Nouveau client connecté : " 
